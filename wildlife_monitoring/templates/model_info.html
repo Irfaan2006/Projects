@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}Deep Learning Architecture & Accuracy Analysis | Intelligent Wildlife Monitoring{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Deep Learning Architecture & Performance Analysis</h1>
+    <p class="page-subtitle">Mathematical formulation, structural innovations, loss functions, and high-accuracy optimization techniques.</p>
+</div>
+
+<!-- Architecture Cards Grid -->
+<div class="grid-main" style="margin-bottom: 2rem;">
+    <!-- YOLOv11 Component Analysis -->
+    <div class="glass-card">
+        <h2 style="font-family: var(--font-heading); font-size: 1.5rem; color: var(--accent-emerald); margin-bottom: 1rem;">
+            <i class="fa-solid fa-layer-group"></i> 1. YOLOv11 Architecture Innovations
+        </h2>
+        <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+            YOLOv11 represents the state-of-the-art in single-stage real-time vision backbones. Compared to YOLOv8 and legacy architectures, YOLOv11 introduces optimized <strong>C3k2 blocks</strong>, enhanced <strong>Spatial Pyramid Pooling Fast (SPPF)</strong>, and a lightened <strong>Decoupled Head</strong>.
+        </p>
+
+        <h4 style="color: var(--accent-teal); font-weight: 600; margin-top: 1.2rem;">A. C3k2 & Feature Extraction</h4>
+        <p style="color: var(--text-secondary); font-size: 0.92rem;">
+            The C3k2 module optimizes gradient flow using split-and-merge cross-stage connections with variable kernel sizes, enabling deep feature representation without introducing computational latency. This is crucial for detecting camouflaged animals in dense foliage.
+        </p>
+
+        <h4 style="color: var(--accent-teal); font-weight: 600; margin-top: 1.2rem;">B. Loss Functions</h4>
+        <p style="color: var(--text-secondary); font-size: 0.92rem;">
+            YOLOv11 utilizes a composite loss function combining Bounding Box Regression Loss (\(\mathcal{L}_{box}\)), Distribution Focal Loss (\(\mathcal{L}_{dfl}\)), and Classification Loss (\(\mathcal{L}_{cls}\)):
+        </p>
+        <div class="math-block">
+            \(\mathcal{L}_{total} = \lambda_{cls} \mathcal{L}_{BCE} + \lambda_{box} \mathcal{L}_{CIoU} + \lambda_{dfl} \mathcal{L}_{DFL}\)
+        </div>
+        <ul style="color: var(--text-secondary); font-size: 0.9rem; padding-left: 1.2rem; margin-top: 0.5rem;">
+            <li><strong>CIoU (Complete IoU)</strong>: penalizes bounding box center distance, aspect ratio mismatch, and scale error.</li>
+            <li><strong>DFL (Distribution Focal Loss)</strong>: handles bounding box localization ambiguity under partial visual occlusion.</li>
+        </ul>
+    </div>
+
+    <!-- DeepSORT Tracking Analysis -->
+    <div class="glass-card">
+        <h2 style="font-family: var(--font-heading); font-size: 1.5rem; color: var(--accent-teal); margin-bottom: 1rem;">
+            <i class="fa-solid fa-route"></i> 2. DeepSORT Multi-Object Tracking Engine
+        </h2>
+        <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+            DeepSORT tracks individual targets across frame losses, camera movements, and temporary occlusions using a combination of motion estimation and visual appearance embeddings.
+        </p>
+
+        <h4 style="color: var(--accent-emerald); font-weight: 600;">A. 8D Kalman State Vector</h4>
+        <p style="color: var(--text-secondary); font-size: 0.92rem;">
+            Each track state vector \(\mathbf{x}\) models spatial coordinates and bounding box dynamics:
+        </p>
+        <div class="math-block">
+            \(\mathbf{x} = [u, v, \gamma, h, \dot{u}, \dot{v}, \dot{\gamma}, \dot{h}]^T\)
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.85rem;">
+            Where \((u, v)\) is box center, \(\gamma = w/h\) is aspect ratio, \(h\) is height, and \(\dot{u}, \dot{v}, \dot{\gamma}, \dot{h}\) are motion velocities.
+        </p>
+
+        <h4 style="color: var(--accent-emerald); font-weight: 600; margin-top: 1.2rem;">B. Dual Distance Association Metric</h4>
+        <p style="color: var(--text-secondary); font-size: 0.92rem;">
+            Matching between active tracks and new YOLOv11 detections uses a linear combination of Mahalanobis motion distance \(d^{(1)}\) and ReID Cosine visual feature distance \(d^{(2)}\):
+        </p>
+        <div class="math-block">
+            \(d^{(1)}(i, j) = (\mathbf{d}_j - \mathbf{y}_i)^T \mathbf{S}_i^{-1} (\mathbf{d}_j - \mathbf{y}_i)\)
+            <br><br>
+            \(d^{(2)}(i, j) = 1 - \mathbf{r}_j^T \mathbf{r}_k^{(i)}\)
+        </div>
+    </div>
+</div>
+
+<!-- Accuracy Benchmarking & Comparison Table -->
+<div class="glass-card">
+    <h2 style="font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 1rem; color: var(--accent-amber);">
+        <i class="fa-solid fa-trophy"></i> 3. Comprehensive Model Accuracy Benchmarks
+    </h2>
+    <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+        Performance evaluation of our YOLOv11 + DeepSORT pipeline against baseline object detection and tracking systems on Wildlife Benchmark Datasets (Camera-Trap images and reserve video feeds).
+    </p>
+
+    <div class="custom-table-wrapper">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Architecture Pipeline</th>
+                    <th>mAP@0.5 (%)</th>
+                    <th>mAP@0.5:0.95 (%)</th>
+                    <th>MOTA (%)</th>
+                    <th>IDF1 (%)</th>
+                    <th>GPU Inference (FPS)</th>
+                    <th>Parameters</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in metrics.comparisons %}
+                <tr {% if 'Active' in row.status %}style="background: rgba(0, 242, 254, 0.04);"{% endif %}>
+                    <td><strong>{{ row.model }}</strong></td>
+                    <td><strong style="color: var(--accent-emerald);">{{ row.mAP_50 }}%</strong></td>
+                    <td>{{ row.mAP_50_95 }}%</td>
+                    <td><strong style="color: var(--accent-teal);">{{ row.mota }}%</strong></td>
+                    <td>{{ row.idf1 }}%</td>
+                    <td><span style="color: var(--accent-green);">{{ row.fps_gpu }} FPS</span></td>
+                    <td>{{ row.params }}</td>
+                    <td>
+                        {% if 'Active' in row.status %}
+                            <span class="badge badge-success">{{ row.status }}</span>
+                        {% else %}
+                            <span class="badge badge-danger">{{ row.status }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

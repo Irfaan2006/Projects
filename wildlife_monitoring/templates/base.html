@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Intelligent Wildlife Monitoring | YOLOv11 + DeepSORT{% endblock %}</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <!-- Navigation Header -->
+    <nav class="navbar">
+        <a href="/" class="brand-container">
+            <div class="brand-icon">
+                <i class="fa-solid fa-paw"></i>
+            </div>
+            <div>
+                <span class="brand-text">WILDLIFE<span style="color: var(--accent-emerald);">AI</span></span>
+                <span class="brand-tag">YOLOv11 + DeepSORT</span>
+            </div>
+        </a>
+
+        <ul class="nav-links">
+            <li>
+                <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}">
+                    <i class="fa-solid fa-chart-line"></i> Dashboard
+                </a>
+            </li>
+            <li>
+                <a href="/live" class="nav-link {% if request.path == '/live' %}active{% endif %}">
+                    <i class="fa-solid fa-video"></i> Live Stream
+                </a>
+            </li>
+            <li>
+                <a href="/video_analysis" class="nav-link {% if request.path == '/video_analysis' %}active{% endif %}">
+                    <i class="fa-solid fa-film"></i> Video Analyzer
+                </a>
+            </li>
+            <li>
+                <a href="/analytics" class="nav-link {% if request.path == '/analytics' %}active{% endif %}">
+                    <i class="fa-solid fa-database"></i> Spatial Analytics
+                </a>
+            </li>
+            <li>
+                <a href="/model_info" class="nav-link {% if request.path == '/model_info' %}active{% endif %}">
+                    <i class="fa-solid fa-brain"></i> DL Architecture & Accuracy
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Page Body -->
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>
+            Intelligent Wildlife Monitoring & Anti-Poaching System &bull; Powered by <strong>YOLOv11</strong> & <strong>DeepSORT</strong> &bull; Flask Production Core
+        </p>
+    </footer>
+
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

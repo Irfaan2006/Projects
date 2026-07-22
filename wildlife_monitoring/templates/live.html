@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Live Stream | Intelligent Wildlife Monitoring System{% endblock %}
+
+{% block content %}
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-end;">
+    <div>
+        <h1 class="page-title">Real-Time Camera-Trap Stream</h1>
+        <p class="page-subtitle">Continuous multi-object tracking, speed vectors, and active danger zone boundary surveillance.</p>
+    </div>
+    <div>
+        <a href="/" class="btn btn-secondary">
+            <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<div class="grid-main">
+    <!-- Stream Column -->
+    <div class="glass-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h3 style="font-family: var(--font-heading); font-size: 1.3rem;">
+                <i class="fa-solid fa-video" style="color: var(--accent-emerald);"></i> Feed Stream Overlay
+            </h3>
+            <span class="badge badge-danger">
+                <i class="fa-solid fa-triangle-exclamation"></i> VIRTUAL FENCE ACTIVE
+            </span>
+        </div>
+
+        <div class="video-wrapper">
+            <div class="stream-overlay-badge">
+                <div class="pulse-dot"></div> MONITORING LIVE
+            </div>
+            <img src="/video_feed" class="video-stream" alt="Live Camera-Trap Feed Stream" />
+        </div>
+    </div>
+
+    <!-- Live Controls & Alert Sidebar -->
+    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+        <div class="glass-card">
+            <h3 style="font-family: var(--font-heading); font-size: 1.2rem; margin-bottom: 1rem;">
+                <i class="fa-solid fa-sliders" style="color: var(--accent-teal);"></i> Detector Threshold Controls
+            </h3>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <div>
+                    <label style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">
+                        YOLOv11 Confidence Threshold (<span id="confVal">0.35</span>)
+                    </label>
+                    <input type="range" min="0.10" max="0.90" step="0.05" value="0.35" style="width: 100%; margin-top: 5px;"
+                           oninput="document.getElementById('confVal').textContent = this.value;" />
+                </div>
+                <div>
+                    <label style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">
+                        DeepSORT ReID Cosine Threshold (<span id="reidVal">0.30</span>)
+                    </label>
+                    <input type="range" min="0.10" max="0.60" step="0.05" value="0.30" style="width: 100%; margin-top: 5px;"
+                           oninput="document.getElementById('reidVal').textContent = this.value;" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Boundary Intrusion Feed -->
+        <div class="glass-card">
+            <h3 style="font-family: var(--font-heading); font-size: 1.2rem; margin-bottom: 1rem; color: var(--accent-rose);">
+                <i class="fa-solid fa-bell"></i> Real-time Zone Breach Alerts
+            </h3>
+            <div id="liveAlertsList" style="display: flex; flex-direction: column; gap: 10px; max-height: 300px; overflow-y: auto;">
+                <div style="background: rgba(244, 63, 94, 0.08); border-left: 3px solid var(--accent-rose); padding: 10px; border-radius: 6px; font-size: 0.85rem;">
+                    <div style="display: flex; justify-content: space-between; font-weight: 600; color: var(--accent-rose);">
+                        <span>Elephant (#12)</span>
+                        <span>00:04:12</span>
+                    </div>
+                    <p style="color: var(--text-secondary); margin-top: 4px;">Entered Virtual Fence Boundary Zone 1</p>
+                </div>
+                <div style="background: rgba(245, 158, 11, 0.08); border-left: 3px solid var(--accent-amber); padding: 10px; border-radius: 6px; font-size: 0.85rem;">
+                    <div style="display: flex; justify-content: space-between; font-weight: 600; color: var(--accent-amber);">
+                        <span>Bear (#18)</span>
+                        <span>00:02:45</span>
+                    </div>
+                    <p style="color: var(--text-secondary); margin-top: 4px;">High Velocity Trajectory Vector Detected</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

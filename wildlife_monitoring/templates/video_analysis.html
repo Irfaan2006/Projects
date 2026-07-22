@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Video Analysis | Intelligent Wildlife Monitoring System{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Offline Video File Analyzer</h1>
+    <p class="page-subtitle">Process camera-trap MP4/AVI videos through YOLOv11 + DeepSORT frame-by-frame with downloadable summary reports.</p>
+</div>
+
+<div class="grid-main">
+    <!-- Upload & Config Form -->
+    <div class="glass-card">
+        <h3 style="font-family: var(--font-heading); font-size: 1.3rem; margin-bottom: 1rem;">
+            <i class="fa-solid fa-file-video" style="color: var(--accent-emerald);"></i> Select Video Footage
+        </h3>
+
+        <form action="/video_analysis" method="POST" enctype="multipart/form-data">
+            <div style="margin-bottom: 1.5rem;">
+                <label for="video_file" class="upload-dropzone" style="display: block;">
+                    <i class="fa-solid fa-film" style="font-size: 3rem; color: var(--accent-emerald); margin-bottom: 0.8rem;"></i>
+                    <p style="font-size: 1.1rem; font-weight: 600;">Choose Video File to Analyze</p>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Supports MP4, AVI, MOV, MKV (Max 200MB)</p>
+                    <input type="file" id="video_file" name="video_file" accept="video/*" required style="margin-top: 1rem;" />
+                </label>
+            </div>
+
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 1;">
+                    <i class="fa-solid fa-gears"></i> Process Video Footage
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Processing Results Summary -->
+    <div class="glass-card">
+        <h3 style="font-family: var(--font-heading); font-size: 1.3rem; margin-bottom: 1rem;">
+            <i class="fa-solid fa-list-check" style="color: var(--accent-teal);"></i> Analysis Summary
+        </h3>
+
+        {% if processed_video %}
+            <div style="margin-bottom: 1.5rem;">
+                <h4 style="color: var(--accent-emerald); font-size: 1rem; margin-bottom: 0.5rem;">Processed Output Video:</h4>
+                <div class="video-wrapper">
+                    <video controls style="width: 100%; display: block;">
+                        <source src="{{ processed_video }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+
+            <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); padding: 1rem; border-radius: 10px; font-size: 0.9rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="color: var(--text-muted);">Total Processed Frames</span>
+                    <strong>{{ summary.total_frames }}</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="color: var(--text-muted);">Processing Speed</span>
+                    <strong style="color: var(--accent-green);">{{ summary.average_fps }} FPS</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="color: var(--text-muted);">Unique Animals Tracked</span>
+                    <strong style="color: var(--accent-emerald);">{{ summary.unique_species_tracked }}</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--text-muted);">Danger Zone Breaches</span>
+                    <strong style="color: var(--accent-rose);">{{ summary.danger_zone_intrusions }}</strong>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 1.2rem;">
+                <a href="/download_report/csv" class="btn btn-secondary" style="flex: 1;">
+                    <i class="fa-solid fa-file-csv"></i> Download CSV
+                </a>
+                <a href="/download_report/json" class="btn btn-secondary" style="flex: 1;">
+                    <i class="fa-solid fa-file-code"></i> Download JSON
+                </a>
+            </div>
+        {% else %}
+            <div style="text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
+                <i class="fa-solid fa-clock-rotate-left" style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--border-color);"></i>
+                <p>No video processed yet. Upload a video file on the left to view frame-by-frame analysis.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

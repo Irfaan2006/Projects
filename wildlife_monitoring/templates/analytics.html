@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Spatial Analytics | Intelligent Wildlife Monitoring System{% endblock %}
+
+{% block content %}
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-end;">
+    <div>
+        <h1 class="page-title">Spatial Analytics & Census Log</h1>
+        <p class="page-subtitle">Persistent Track ID history, spatial trajectory durations, and danger zone breach audits.</p>
+    </div>
+    <div style="display: flex; gap: 1rem;">
+        <a href="/download_report/csv" class="btn btn-primary">
+            <i class="fa-solid fa-file-csv"></i> Export CSV
+        </a>
+        <a href="/download_report/json" class="btn btn-secondary">
+            <i class="fa-solid fa-file-code"></i> Export JSON
+        </a>
+    </div>
+</div>
+
+<!-- Intrusion Warning Alert Banner if breaches exist -->
+{% if intrusions %}
+<div style="background: rgba(244, 63, 94, 0.1); border: 1px solid rgba(244, 63, 94, 0.4); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem;">
+    <i class="fa-solid fa-triangle-exclamation" style="font-size: 1.8rem; color: var(--accent-rose);"></i>
+    <div>
+        <h4 style="color: var(--accent-rose); font-size: 1rem;">Virtual Fence Intrusion Detected!</h4>
+        <p style="color: var(--text-secondary); font-size: 0.88rem;">
+            Total of <strong>{{ intrusions|length }}</strong> boundary intrusion events logged. Review individual track IDs below.
+        </p>
+    </div>
+</div>
+{% endif %}
+
+<!-- Table Glass Card -->
+<div class="glass-card">
+    <h3 style="font-family: var(--font-heading); font-size: 1.3rem; margin-bottom: 1rem;">
+        <i class="fa-solid fa-table-list" style="color: var(--accent-teal);"></i> Persistent Track ID Registry
+    </h3>
+
+    <div class="custom-table-wrapper">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Track ID</th>
+                    <th>Species Label</th>
+                    <th>First Detected</th>
+                    <th>Last Active</th>
+                    <th>Duration</th>
+                    <th>Max Conf</th>
+                    <th>Danger Zone Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if records %}
+                    {% for row in records %}
+                    <tr>
+                        <td><strong style="color: var(--accent-emerald);">#{{ row.Track_ID }}</strong></td>
+                        <td>{{ row.Species }}</td>
+                        <td>{{ row.First_Detected }}</td>
+                        <td>{{ row.Last_Detected }}</td>
+                        <td>{{ row.Duration_Sec }} s</td>
+                        <td><span style="color: var(--accent-teal);">{{ "%.2f"|format(row.Max_Confidence) }}</span></td>
+                        <td>
+                            {% if row.Zone_Intrusion_Triggered %}
+                                <span class="badge badge-danger">Intruded</span>
+                            {% else %}
+                                <span class="badge badge-success">Clear</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <!-- Demo Sample Rows if no live sessions run yet -->
+                    <tr>
+                        <td><strong style="color: var(--accent-emerald);">#101</strong></td>
+                        <td>Elephant</td>
+                        <td>2026-07-22 00:01:10</td>
+                        <td>2026-07-22 00:03:45</td>
+                        <td>155.0 s</td>
+                        <td>0.96</td>
+                        <td><span class="badge badge-danger">Intruded</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong style="color: var(--accent-emerald);">#102</strong></td>
+                        <td>Zebra</td>
+                        <td>2026-07-22 00:02:00</td>
+                        <td>2026-07-22 00:04:12</td>
+                        <td>132.0 s</td>
+                        <td>0.92</td>
+                        <td><span class="badge badge-success">Clear</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong style="color: var(--accent-emerald);">#103</strong></td>
+                        <td>Giraffe</td>
+                        <td>2026-07-22 00:02:30</td>
+                        <td>2026-07-22 00:05:00</td>
+                        <td>150.0 s</td>
+                        <td>0.94</td>
+                        <td><span class="badge badge-success">Clear</span></td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
